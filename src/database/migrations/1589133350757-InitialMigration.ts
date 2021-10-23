@@ -4,6 +4,7 @@ export class InitialMigration1589133350757 implements MigrationInterface {
     name = 'InitialMigration1589133350757'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`, undefined);
         await queryRunner.query(`CREATE TYPE "invoice_model_paymentstatus_enum" AS ENUM('PAID', 'NOT_PAID')`, undefined);
         await queryRunner.query(`CREATE TYPE "invoice_model_currency_enum" AS ENUM('NGN', 'USD', 'GBP', ' EUR')`, undefined);
         await queryRunner.query(`CREATE TABLE "invoice_model" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "invoiceNo" character varying(500) NOT NULL, "description" text NOT NULL, "paymentStatus" "invoice_model_paymentstatus_enum" NOT NULL DEFAULT 'NOT_PAID', "currency" "invoice_model_currency_enum" NOT NULL DEFAULT 'USD', "taxRate" integer NOT NULL, "issueDate" character varying NOT NULL, "dueDate" character varying NOT NULL, "note" text NOT NULL, "items" jsonb NOT NULL DEFAULT '[]', "taxAmount" integer NOT NULL, "subTotal" integer NOT NULL, "total" character varying NOT NULL, "amountPaid" integer NOT NULL DEFAULT 0, "outstandingBalance" integer NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "customerId" uuid, CONSTRAINT "PK_6a0070052d40c4b4f4eb4ce7f36" PRIMARY KEY ("id"))`, undefined);
